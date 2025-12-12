@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход — CV Letter AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. ФОН --- */
+        body {
+            background-color: #0f0c29;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Шары (немного другие цвета для разнообразия) */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+        .orb-1 {
+            width: 350px; height: 350px;
+            background: #4361ee; /* Синий */
+            top: -80px; left: 20%;
+        }
+        .orb-2 {
+            width: 300px; height: 300px;
+            background: #f72585; /* Розовый неон */
+            bottom: -50px; right: 10%;
+            animation-delay: -3s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, -40px); }
+        }
+
+        /* --- 2. КАРТОЧКА --- */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- 3. ПОЛЯ --- */
+        .form-label { color: rgba(255, 255, 255, 0.9); font-weight: 600; }
+        
+        .form-control {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 12px;
+            padding: 12px;
+            transition: 0.3s;
+        }
+        .form-control:focus {
+            background: rgba(0, 0, 0, 0.6);
+            border-color: #f72585; /* Розовая обводка при фокусе */
+            box-shadow: 0 0 15px rgba(247, 37, 133, 0.3);
+            color: white;
+        }
+
+        /* --- 4. КНОПКА --- */
+        .btn-glow {
+            background: linear-gradient(45deg, #4361ee, #f72585);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 12px;
+            width: 100%;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.4);
+        }
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(247, 37, 133, 0.6);
+            color: white;
+        }
+
+        .register-link { color: rgba(255, 255, 255, 0.6); text-decoration: none; }
+        .register-link:hover { color: #f72585; }
+
+        .key-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #4cc9f0, #4361ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="glass-card">
+        <div class="text-center mb-4">
+            <i class="fas fa-fingerprint key-icon"></i>
+            <h2 class="fw-bold text-white">Welcome Back</h2>
+            <p class="text-white-50">Войди, чтобы продолжить</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label class="form-label">Логин (Username)</label>
+                <input type="text" name="username" class="form-control" required placeholder="Твой никнейм">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Пароль</label>
+                <input type="password" name="password" class="form-control" required placeholder="••••••••">
+            </div>
+
+            <button type="submit" class="btn btn-glow">
+                Войти в систему
+            </button>
+        </form>
+
+        <div class="text-center mt-4 pt-3 border-top border-secondary border-opacity-25">
+            <a href="{% url 'register' %}" class="register-link">
+                Нет аккаунта? <span class="fw-bold text-white">Регистрация</span>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
