@@ -80,6 +80,7 @@ WSGI_APPLICATION = 'aigen.wsgi.application'
 
 # Если мы на сервере (есть DATABASE_URL) — используем PostgreSQL
 # Если мы дома — используем старый SQLite
+# ЭТО СТАРЫЙ КОД - УДАЛИ ЕГО ПОЛНОСТЬЮ
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'),
