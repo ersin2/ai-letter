@@ -19,6 +19,7 @@ from django.urls import path,include
 from django.contrib.auth import views as auth_views # Встроенные вьюхи для входа/выхода
 from users import views as user_views
 from django.views.generic import TemplateView
+from generator import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +30,5 @@ urlpatterns = [
     path('profile/', user_views.profile, name='profile'),
     path('pricing/', TemplateView.as_view(template_name='generator/pricing.html'), name='pricing'),
     path('buy-premium/', user_views.buy_premium, name='buy_premium'),
+    #path('download-pdf/', views.download_pdf, name='download_pdf'),
 ]

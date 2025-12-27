@@ -4,240 +4,374 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генератор — CV Letter AI</title>
-    
+    <title>CV Builder Pro | Elite</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 1. ФОН --- */
+        /* --- 1. ГЛОБАЛЬНЫЙ СТИЛЬ --- */
+        :root {
+            --primary: #4cc9f0;
+            --secondary: #f72585;
+            --dark-bg: #0a0e17;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
         body {
-            background-color: #0f0c29;
-            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark-bg);
+            font-family: 'Outfit', sans-serif;
+            color: #e2e8f0;
             min-height: 100vh;
-            color: white;
-            position: relative;
-            padding-bottom: 50px;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(76, 201, 240, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(247, 37, 133, 0.15) 0%, transparent 40%);
         }
 
-        /* Плавающие шары */
-        .orb {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            animation: float 10s infinite alternate ease-in-out;
-        }
-        .orb-1 { width: 400px; height: 400px; background: #7209b7; top: -50px; left: -100px; }
-        .orb-2 { width: 350px; height: 350px; background: #4cc9f0; bottom: 10%; right: -50px; animation-delay: -5s; }
-        .orb-3 { width: 200px; height: 200px; background: #f72585; top: 20%; right: 20%; opacity: 0.6; animation-duration: 15s; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--dark-bg); }
+        ::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(30px, 40px); }
-        }
-
-        /* --- 2. НАВИГАЦИЯ (Профиль) --- */
-        .navbar-custom { padding: 20px 0; margin-bottom: 20px; }
-        
-        .profile-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 50px;
-            text-decoration: none;
-            transition: 0.3s;
-            display: flex; align-items: center; gap: 10px;
-            backdrop-filter: blur(10px);
-        }
-        .profile-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #00d4ff;
-            transform: translateY(-2px);
-        }
-
-        /* --- 3. СТЕКЛЯННАЯ КАРТОЧКА --- */
+        /* --- 2. СТЕКЛЯННАЯ КАРТОЧКА --- */
         .glass-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(20, 25, 40, 0.7);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            animation: slideUp 0.8s ease-out;
-            position: relative; /* Чтобы внутри позиционировать элементы */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- 4. ПОЛЯ ВВОДА --- */
-        .form-label { font-weight: 600; color: rgba(255,255,255,0.9); margin-bottom: 10px; }
-        
-        textarea.form-control {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            border-radius: 15px;
-            resize: none;
-            transition: 0.3s;
-            font-size: 0.95rem;
-        }
-        textarea.form-control:focus {
-            background: rgba(0, 0, 0, 0.5);
-            border-color: #00d4ff;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
-            color: white;
-            outline: none;
-        }
-        textarea.form-control::placeholder { color: rgba(255,255,255,0.3); }
-
-        /* --- 5. КНОПКА ГЕНЕРАЦИИ --- */
-        .btn-magic {
-            background: linear-gradient(135deg, #4361ee, #f72585);
-            border: none;
-            color: white;
-            font-weight: 700;
-            padding: 15px;
+        /* --- 3. ПОЛЯ ВВОДА --- */
+        .form-label { font-size: 0.85rem; font-weight: 600; color: #94a3b8; margin-bottom: 8px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .form-control, .form-select {
+            background: rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid var(--border) !important;
+            color: #fff !important;
             border-radius: 12px;
-            width: 100%;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-            box-shadow: 0 5px 20px rgba(67, 97, 238, 0.4);
+            padding: 14px 16px;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s;
         }
-        .btn-magic:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(247, 37, 133, 0.6);
-            color: white;
+        .form-control:focus, .form-select:focus {
+            background: rgba(0, 0, 0, 0.5) !important;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 4px rgba(76, 201, 240, 0.15);
+        }
+        option { background-color: #1a202c; color: white; }
+
+        /* --- 4. ЗАГРУЗКА ФАЙЛА --- */
+        .file-upload-box {
+            position: relative; height: 120px; border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.02); transition: 0.3s; cursor: pointer; overflow: hidden;
+        }
+        .file-upload-box:hover { border-color: var(--secondary); background: rgba(247, 37, 133, 0.05); }
+        .file-upload-box input { position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2; }
+        .file-icon { font-size: 2rem; color: #64748b; margin-bottom: 10px; transition: 0.3s; }
+        .file-text { font-size: 0.9rem; color: #94a3b8; }
+        .file-upload-box:hover .file-icon { color: var(--secondary); transform: scale(1.1); }
+
+        /* --- 5. СЛАЙДЕРЫ --- */
+        .skill-row {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 15px;
+        }
+        .range-slider { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); outline: none; }
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+            background: var(--primary); cursor: pointer; box-shadow: 0 0 10px var(--primary);
+            border: 2px solid #fff; transition: 0.2s;
+        }
+        .range-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+        .level-badge { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; padding: 4px 8px; border-radius: 6px; background: rgba(76, 201, 240, 0.1); color: var(--primary); min-width: 80px; text-align: center; }
+
+        /* --- 6. КНОПКИ --- */
+        .btn-custom { border: none; padding: 16px; border-radius: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .btn-ai {
+            background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b); background-size: 200% 200%;
+            animation: gradientAnim 5s ease infinite; color: white;
+        }
+        @keyframes gradientAnim { 0% {background-position: 0% 50%} 50% {background-position: 100% 50%} 100% {background-position: 0% 50%} }
+        .btn-pdf { background: var(--primary); color: #0f172a; box-shadow: 0 0 20px rgba(76, 201, 240, 0.3); }
+        .btn-pdf:hover { background: #fff; transform: translateY(-2px); }
+        .btn-add { background: transparent; border: 1px dashed rgba(255,255,255,0.3); color: #94a3b8; font-size: 0.9rem; padding: 10px; width: 100%; border-radius: 10px; }
+        .btn-add:hover { border-color: var(--primary); color: white; background: rgba(76, 201, 240, 0.1); }
+        .btn-del { color: #ef4444; background: none; border: none; font-size: 1.1rem; opacity: 0.7; }
+        .btn-del:hover { opacity: 1; transform: scale(1.2); }
+
+        /* --- 7. TABS STYLE --- */
+        .nav-pills .nav-link { color: #94a3b8; transition: 0.3s; }
+        .nav-pills .nav-link:hover { color: white; background: rgba(255,255,255,0.1); }
+        .nav-pills .nav-link.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
+            color: white !important;
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.4);
         }
 
-        /* --- 6. БЛОК ОШИБКИ (НОВОЕ!) --- */
-        .error-alert {
-            background: rgba(220, 53, 69, 0.15); /* Прозрачный красный */
-            border: 1px solid #ff6b6b;
-            color: #ffb3b3;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            animation: shake 0.5s ease-in-out; /* Тряска при появлении */
+        .logo-text {
+            font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.5rem;
+            background: linear-gradient(90deg, #fff, var(--primary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-decoration: none; display: flex; align-items: center; gap: 10px;
         }
-        .error-alert a { color: white; text-decoration: underline; font-weight: bold; }
-        
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-            100% { transform: translateX(0); }
-        }
-
-        /* --- 7. РЕЗУЛЬТАТ --- */
-        .result-container { margin-top: 40px; }
-        .result-box {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 15px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #e0e0e0;
-            white-space: pre-wrap;
-            line-height: 1.6;
-            font-size: 1.05rem;
-        }
-        .section-icon { font-size: 1.2rem; margin-right: 8px; }
     </style>
 </head>
 <body>
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-
-    <div class="container">
+    <div class="container py-5">
         
-        <div class="d-flex justify-content-between align-items-center navbar-custom animate__animated animate__fadeInDown">
-            <h3 class="m-0 fw-bold"><i class="fas fa-robot text-info me-2"></i>CV Letter AI</h3>
-            
+        <div class="d-flex justify-content-between align-items-center mb-5 animate__animated animate__fadeInDown">
+            <a href="{% url 'home' %}" class="logo-text">
+                <i class="fas fa-cube text-white"></i> CV_BUILDER<span style="color:var(--secondary)">.PRO</span>
+            </a>
             {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" class="profile-btn">
-                    <i class="fas fa-user-circle fs-5"></i>
-                    <span>{{ user.username }}</span>
-                </a>
-            {% else %}
-                <a href="{% url 'login' %}" class="profile-btn">Войти</a>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-white-50 small">Welcome,</span>
+                    <a href="{% url 'profile' %}" class="badge bg-white text-dark text-decoration-none px-3 py-2 rounded-pill">
+                        {{ user.username }}
+                    </a>
+                </div>
             {% endif %}
         </div>
 
         <div class="row justify-content-center">
-            <div class="col-lg-8">
+            <div class="col-lg-9 col-xl-8">
                 
-                <div class="glass-card p-4 p-md-5">
+                <div class="glass-card animate__animated animate__fadeInUp">
                     
-                    <div class="text-center mb-4">
-                        <h1 class="fw-bold mb-2">Создай карьеру мечты</h1>
-                        <p class="text-white-50">Вставь резюме и вакансию — получи идеальное письмо</p>
-                    </div>
+                    <form method="post" enctype="multipart/form-data" id="cvForm">
+                        {% csrf_token %}
 
-                    {% if error_message %}
-                    <div class="error-alert">
-                        <i class="fas fa-exclamation-triangle fs-4 me-3 text-danger"></i>
+                        <div class="mb-5">
+                            <h4 class="text-white fw-bold mb-4"><i class="fas fa-magic me-2" style="color: var(--secondary);"></i>AI Letter Generator <span class="badge bg-warning text-dark ms-2 small">ELITE</span></h4>
+                            
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Целевая Компания</label>
+                                    <input type="text" name="company_name" class="form-control" placeholder="Google, Amazon, etc.">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Должность (Job Title)</label>
+                                    <input type="text" name="job_title_ai" class="form-control" placeholder="Senior Product Manager">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Тон письма</label>
+                                    <select name="tone" class="form-select">
+                                        <option value="Professional" selected>Professional 👔</option>
+                                        <option value="Confident">Confident 🔥</option>
+                                        <option value="Bold">Bold 🚀</option>
+                                        <option value="Concise">Concise 📝</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Язык</label>
+                                    <select name="language" class="form-select">
+                                        <option value="English" selected>English 🇺🇸</option>
+                                        <option value="Russian">Russian 🇷🇺</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Текст Резюме (Raw CV Text)</label>
+                                    <textarea name="resume" class="form-control" rows="4" placeholder="Вставь сюда текст резюме...">{{ resume_text }}</textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Описание Вакансии (Job Description)</label>
+                                    <textarea name="job_description" class="form-control" rows="4" placeholder="Кого они ищут? Requirements..."></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" name="action" value="generate_letter" class="btn btn-custom btn-ai w-100">
+                                        <i class="fas fa-sparkles me-2"></i>Сгенерировать PRO Письмо
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            {% if result %}
+                            {% load custom_filters %}
+                            {% with sections=result|parse_sections %}
+                            
+                            <div class="mt-5 animate__animated animate__fadeInUp">
+                                <h5 class="text-white fw-bold mb-3"><i class="fas fa-check-circle text-success me-2"></i>Результат готов:</h5>
+                                
+                                <ul class="nav nav-pills mb-3 gap-2" id="pills-tab" role="tablist" style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active rounded-pill fw-bold" id="pills-main-tab" data-bs-toggle="pill" data-bs-target="#pills-main" type="button" role="tab">📄 Письмо</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link rounded-pill fw-bold" id="pills-alt-tab" data-bs-toggle="pill" data-bs-target="#pills-alt" type="button" role="tab">🎭 Варианты</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link rounded-pill fw-bold" id="pills-ats-tab" data-bs-toggle="pill" data-bs-target="#pills-ats" type="button" role="tab">🤖 ATS Score</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link rounded-pill fw-bold" id="pills-risk-tab" data-bs-toggle="pill" data-bs-target="#pills-risk" type="button" role="tab">⚠️ Риски</button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content" id="pills-tabContent">
+                                    
+                                    <div class="tab-pane fade show active" id="pills-main" role="tabpanel">
+                                        <div class="position-relative p-4 rounded-4" style="background: rgba(0,0,0,0.4); border: 1px solid var(--primary);">
+                                            <button type="button" class="btn btn-sm btn-outline-light position-absolute top-0 end-0 m-3" onclick="copyToClipboard('main-text')"><i class="fas fa-copy me-2"></i>Copy</button>
+                                            <pre id="main-text" class="text-white-50" style="white-space: pre-wrap; font-family: 'Outfit', sans-serif; font-size: 0.95rem;">{{ sections.main }}</pre>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="pills-alt" role="tabpanel">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <div class="p-3 rounded-4 h-100" style="background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2);">
+                                                    <h6 class="text-warning fw-bold mb-3">Version A: Corporate</h6>
+                                                    <div class="small text-white-50" style="white-space: pre-wrap;">{{ sections.ver_a }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="p-3 rounded-4 h-100" style="background: rgba(255,255,255,0.05); border: 1px dashed rgba(255,255,255,0.2);">
+                                                    <h6 class="text-info fw-bold mb-3">Version B: Bold</h6>
+                                                    <div class="small text-white-50" style="white-space: pre-wrap;">{{ sections.ver_b }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="pills-ats" role="tabpanel">
+                                        <div class="p-4 rounded-4" style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3);">
+                                            <h5 class="text-success fw-bold"><i class="fas fa-robot me-2"></i>ATS Compatibility</h5>
+                                            <div class="text-white" style="white-space: pre-wrap;">{{ sections.ats }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="pills-risk" role="tabpanel">
+                                        <div class="p-4 rounded-4" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);">
+                                            <h5 class="text-danger fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Recruiter Red Flags</h5>
+                                            <div class="text-white" style="white-space: pre-wrap;">{{ sections.risks }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endwith %}
+                            {% endif %}
+                            
+                            {% if error_message %}
+                            <div class="alert alert-danger mt-3">{{ error_message }}</div>
+                            {% endif %}
+                        </div>
+
+                        <hr class="border-secondary opacity-25 my-5">
+
                         <div>
-                            <strong>Упс!</strong> {{ error_message }}
-                            <div class="mt-1">
-                                <a href="{% url 'profile' %}">Пополнить баланс <i class="fas fa-arrow-right small"></i></a>
+                            <div class="d-flex align-items-center mb-4">
+                                <h4 class="text-white fw-bold m-0"><i class="fas fa-file-pdf me-2" style="color: var(--primary);"></i>PDF Builder</h4>
+                            </div>
+
+                            <div class="row g-4">
+                                <div class="col-12">
+                                    <label class="form-label">Фото профиля</label>
+                                    <div class="file-upload-box" id="drop-zone">
+                                        <input type="file" name="photo" accept="image/*" onchange="updateFileLabel(this)">
+                                        <i class="fas fa-cloud-upload-alt file-icon"></i>
+                                        <span class="file-text" id="file-label">Перетащи фото сюда или нажми</span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6"><label class="form-label">Имя Фамилия</label><input type="text" name="full_name" class="form-control"></div>
+                                <div class="col-md-6"><label class="form-label">Должность</label><input type="text" name="target_role" class="form-control"></div>
+                                <div class="col-md-6"><label class="form-label">Email</label><input type="email" name="email" class="form-control"></div>
+                                <div class="col-md-6"><label class="form-label">Телефон</label><input type="text" name="phone" class="form-control"></div>
+                                <div class="col-md-6"><label class="form-label">LinkedIn</label><input type="text" name="linkedin" class="form-control"></div>
+                                <div class="col-md-6"><label class="form-label">Локация</label><input type="text" name="location" class="form-control"></div>
+
+                                <div class="col-12"><label class="form-label">Summary</label><textarea name="about_me" class="form-control" rows="3"></textarea></div>
+                                <div class="col-12"><label class="form-label">Опыт работы</label><textarea name="experience_text" class="form-control" rows="5"></textarea></div>
+
+                                <div class="col-12">
+                                    <label class="form-label mb-3 d-flex justify-content-between">
+                                        <span>Навыки</span><span class="text-white-50 small">Уровень</span>
+                                    </label>
+                                    <div id="skills-container"></div>
+                                    <button type="button" class="btn-add mt-2" onclick="addSkillRow()"><i class="fas fa-plus me-2"></i>Добавить навык</button>
+                                    <input type="hidden" name="skills_list" id="hidden_skills_input">
+                                </div>
+
+                                <div class="col-md-6"><label class="form-label">Языки</label><input type="text" name="languages" class="form-control"></div>
+                                <div class="col-md-6"><label class="form-label">Референсы</label><input type="text" name="references" class="form-control"></div>
+
+                                <div class="col-12 mt-4">
+                                    <button type="submit" name="action" value="download_pdf" class="btn btn-custom btn-pdf w-100" onclick="collectSkills()">
+                                        Скачать PDF <i class="fas fa-download ms-2"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    {% endif %}
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        <div class="mb-4">
-                            <label class="form-label text-info">
-                                <i class="fas fa-file-alt section-icon"></i>Твоё резюме
-                            </label>
-                            <textarea name="resume" class="form-control" rows="5" placeholder="Вставь сюда текст своего резюме..." required></textarea>
-                        </div>
 
-                        <div class="mb-4">
-                            <label class="form-label text-warning">
-                                <i class="fas fa-briefcase section-icon"></i>Вакансия
-                            </label>
-                            <textarea name="job_description" class="form-control" rows="5" placeholder="Вставь описание вакансии..." required></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-magic">
-                            <i class="fas fa-wand-magic-sparkles me-2"></i>Сгенерировать
-                        </button>
                     </form>
                 </div>
-
-                {% if result %}
-                <div class="glass-card p-4 p-md-5 result-container animate__animated animate__fadeInUp">
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-check-circle text-success fs-3 me-3"></i>
-                        <h3 class="m-0 fw-bold">Готово!</h3>
-                    </div>
-                    
-                    <div class="result-box">
-{{ result }}
-                    </div>
-                    
-                    <div class="text-center mt-3">
-                        <small class="text-white-50">Скопируй текст и отправь работодателю 🚀</small>
-                    </div>
-                </div>
-                {% endif %}
-
             </div>
         </div>
     </div>
 
+    <script>
+        function updateFileLabel(input) {
+            const label = document.getElementById('file-label');
+            const icon = input.parentElement.querySelector('.file-icon');
+            if (input.files && input.files.length > 0) {
+                label.innerHTML = input.files[0].name; label.style.color = "#4cc9f0"; icon.className = "fas fa-check-circle file-icon text-success";
+            }
+        }
+        function getLevelName(val) {
+            if (val >= 90) return "EXPERT"; if (val >= 70) return "SENIOR"; if (val >= 40) return "MIDDLE"; return "JUNIOR";
+        }
+        function addSkillRow(name="", val=50) {
+            const container = document.getElementById('skills-container');
+            const div = document.createElement('div');
+            div.className = 'skill-row animate__animated animate__fadeIn';
+            div.innerHTML = `
+                <div style="width: 35%;"><input type="text" class="form-control form-control-sm skill-name" placeholder="Название" value="${name}"></div>
+                <div class="d-flex align-items-center gap-3" style="flex: 1;">
+                    <input type="range" class="range-slider skill-val" min="0" max="100" value="${val}" oninput="updateLabel(this)">
+                    <span class="level-badge">${getLevelName(val)}</span>
+                </div>
+                <button type="button" class="btn-del" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
+            `;
+            container.appendChild(div);
+        }
+        function updateLabel(slider) {
+            const badge = slider.nextElementSibling; badge.innerText = getLevelName(slider.value);
+            if(slider.value >= 90) badge.style.color = "#f72585"; else badge.style.color = "#4cc9f0";
+        }
+        function collectSkills() {
+            const rows = document.querySelectorAll('.skill-row'); let result = [];
+            rows.forEach(row => {
+                const name = row.querySelector('.skill-name').value.trim();
+                const val = row.querySelector('.skill-val').value;
+                if (name) result.push(`${name}-${val}`);
+            });
+            document.getElementById('hidden_skills_input').value = result.join(',');
+        }
+        function copyToClipboard(elementId) {
+            var copyText = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(copyText).then(function() { alert("Скопировано!"); });
+        }
+        window.onload = function() {
+            if(document.getElementById('skills-container').children.length === 0) {
+                addSkillRow('Python', 80); addSkillRow('Django', 70); addSkillRow('SQL', 60);
+            }
+        };
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

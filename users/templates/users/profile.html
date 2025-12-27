@@ -4,118 +4,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профиль — CV Letter AI</title>
+    <title>Личный Кабинет | Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
+        :root { --primary: #4cc9f0; --secondary: #f72585; --dark-bg: #0a0e17; --gold: #ffd700; }
         body {
-            background-color: #0f0c29;
-            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark-bg);
+            font-family: 'Outfit', sans-serif;
+            color: #e2e8f0;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(67, 97, 238, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(247, 37, 133, 0.1) 0%, transparent 40%);
         }
-        
-        /* Фон (Шары) */
-        .orb { position: absolute; border-radius: 50%; filter: blur(90px); z-index: -1; }
-        .orb-1 { width: 400px; height: 400px; background: #7209b7; top: -100px; left: -100px; }
-        .orb-2 { width: 300px; height: 300px; background: #4cc9f0; bottom: -50px; right: -50px; }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
+        /* Navbar */
+        .navbar-custom { padding: 20px 0; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; font-weight: 700; color: white; text-decoration: none; }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        /* Glass Card */
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 40px;
-            width: 100%;
-            max-width: 500px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
-
-        .avatar-circle {
-            width: 100px; height: 100px;
-            background: linear-gradient(45deg, #4cc9f0, #4361ee);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 3rem; margin: 0 auto 20px;
-            box-shadow: 0 0 20px rgba(67, 97, 238, 0.5);
-        }
-
-        .stat-box {
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            padding: 15px;
-            margin-top: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .btn-logout {
-            background: rgba(255, 59, 48, 0.2);
-            color: #ff3b30;
-            border: 1px solid rgba(255, 59, 48, 0.3);
-            width: 100%; padding: 10px; border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 25px;
             transition: 0.3s;
-            text-decoration: none; display: block; text-align: center;
+            position: relative; overflow: hidden;
         }
-        .btn-logout:hover { background: rgba(255, 59, 48, 0.4); color: white; }
-        
-        .btn-home {
-            background: linear-gradient(90deg, #00d4ff, #007bff);
-            color: white; border: none;
-            width: 100%; padding: 12px; border-radius: 12px;
-            margin-bottom: 10px; font-weight: bold;
+        .stat-card:hover { transform: translateY(-5px); border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); }
+
+        .stat-title { font-size: 0.9rem; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+        .stat-value { font-size: 2.5rem; font-weight: 800; color: white; }
+        .stat-icon { position: absolute; right: 20px; bottom: 20px; font-size: 4rem; opacity: 0.1; }
+
+        /* Status Badge */
+        .badge-pro { background: rgba(255, 215, 0, 0.1); color: var(--gold); border: 1px solid var(--gold); padding: 5px 12px; border-radius: 50px; font-size: 0.8rem; }
+        .badge-free { background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 50px; font-size: 0.8rem; }
+
+        /* Buttons */
+        .btn-home { background: var(--primary); color: #000; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 700; text-decoration: none; display: inline-block; transition: 0.3s; }
+        .btn-home:hover { background: white; color: #000; box-shadow: 0 0 15px var(--primary); }
+
+        .btn-logout { background: transparent; border: 1px solid #ef4444; color: #ef4444; padding: 10px 20px; border-radius: 12px; transition: 0.3s; }
+        .btn-logout:hover { background: #ef4444; color: white; }
+
+        .btn-buy { 
+            background: linear-gradient(45deg, #ffd700, #fdb931); 
+            border: none; color: #000; width: 100%; padding: 15px; border-radius: 12px; font-weight: 800; text-transform: uppercase; margin-top: 20px;
+            box-shadow: 0 10px 20px rgba(253, 185, 49, 0.2);
+            transition: 0.3s;
         }
+        .btn-buy:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
     </style>
 </head>
 <body>
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
 
-    <div class="glass-card">
-        <div class="text-center">
-            <div class="avatar-circle">
-                <i class="fas fa-user-astronaut text-white"></i>
+    <div class="container">
+        
+        <nav class="navbar-custom animate__animated animate__fadeInDown">
+            <a href="{% url 'home' %}" class="logo"><i class="fas fa-cube text-primary me-2"></i>CV_PRO</a>
+            <div class="d-flex align-items-center gap-3">
+                <span class="text-white fw-bold">{{ user.username }}</span>
+                <form action="{% url 'logout' %}" method="post" style="margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout"><i class="fas fa-sign-out-alt me-2"></i>Выйти</button>
+                </form>
             </div>
-            <h2 class="fw-bold">{{ user.username }}</h2>
-            <p class="text-white-50">{{ user.email }}</p>
+        </nav>
+
+        <div class="mt-5 animate__animated animate__fadeInLeft">
+            <h2 class="fw-bold text-white">Dashboard ⚡</h2>
+            <p class="text-white-50">Управляй своим аккаунтом и подпиской.</p>
         </div>
 
-        <div class="stat-box">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-                <span>💎 Статус:</span>
-                {% if user.profile.is_premium %}
-                    <span class="badge bg-warning text-dark">PREMIUM</span>
-                {% else %}
-                    <span class="badge bg-secondary">FREE</span>
-                {% endif %}
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-                <span>⚡ Доступно генераций:</span>
-                <span class="fw-bold fs-5 text-info">
-    {% if user.profile.is_premium %}
-        <i class="fas fa-infinity"></i> {% else %}
-        {{ user.profile.generations_count }}
-    {% endif %}
-</span>
-            </div>
-        </div>
-
-        <div class="mt-4">
-            <a href="{% url 'home' %}" class="btn btn-home d-block text-center text-decoration-none">
-                <i class="fas fa-magic me-2"></i> Перейти к генератору
-            </a>
+        <div class="dashboard-grid animate__animated animate__fadeInUp">
             
-            <form action="{% url 'logout' %}" method="post" class="mt-2">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-logout">
-                    <i class="fas fa-sign-out-alt me-2"></i> Выйти
-                </button>
-            </form>
+            <div class="stat-card">
+                <div class="stat-title">Доступно генераций</div>
+                <div class="stat-value text-info">
+                    {% if user.profile.is_premium %}∞{% else %}{{ user.profile.generations_count }}{% endif %}
+                </div>
+                <i class="fas fa-bolt stat-icon text-info"></i>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-title">Статус аккаунта</div>
+                <div class="d-flex align-items-center gap-2 mt-2">
+                    {% if user.profile.is_premium %}
+                        <span class="stat-value text-warning" style="font-size: 2rem;">PREMIUM</span>
+                        <i class="fas fa-crown text-warning fs-4"></i>
+                    {% else %}
+                        <span class="stat-value text-white" style="font-size: 2rem;">FREE</span>
+                    {% endif %}
+                </div>
+                <i class="fas fa-user-circle stat-icon text-white"></i>
+            </div>
+
+            <div class="stat-card" style="border-color: var(--primary);">
+                <div class="stat-title">Быстрый доступ</div>
+                <p class="text-white-50 small mb-4">Создай новое резюме прямо сейчас.</p>
+                <a href="{% url 'home' %}" class="btn-home w-100 text-center">
+                    Перейти в генератор <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+
         </div>
+
+        {% if not user.profile.is_premium %}
+        <div class="mt-5 p-4 rounded-4 animate__animated animate__fadeInUp" style="background: rgba(255, 215, 0, 0.05); border: 1px solid rgba(255, 215, 0, 0.2);">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4 class="text-warning fw-bold"><i class="fas fa-crown me-2"></i>Upgrade to Premium</h4>
+                    <p class="text-white-50 mb-0">Получи безлимитные генерации AI писем и доступ к PRO-шаблонам PDF.</p>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn-buy">Купить Premium</button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
     </div>
+
 </body>
 </html>

@@ -4,206 +4,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Регистрация — CV Letter AI</title>
+    <title>Регистрация | CV Builder Pro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 1. ФОН И АТМОСФЕРА --- */
+        :root { --primary: #4cc9f0; --secondary: #f72585; --dark-bg: #0a0e17; }
         body {
-            background-color: #0f0c29;
-            font-family: 'Montserrat', sans-serif;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden; /* Чтобы шары не растягивали страницу */
-            position: relative;
-        }
-
-        /* Плавающие неоновые шары (фон) */
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            animation: float 10s infinite alternate ease-in-out;
-        }
-        .orb-1 {
-            width: 300px; height: 300px;
-            background: #00d4ff;
-            top: -50px; left: -50px;
-        }
-        .orb-2 {
-            width: 400px; height: 400px;
-            background: #7b2cbf;
-            bottom: -100px; right: -100px;
-            animation-delay: -5s;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(30px, 50px); }
-        }
-
-        /* --- 2. СТЕКЛЯННАЯ КАРТОЧКА --- */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05); /* Очень прозрачный белый */
-            backdrop-filter: blur(20px);            /* Размытие фона */
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 50px 40px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            
-            /* Анимация появления */
-            animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- 3. ПОЛЯ ВВОДА --- */
-        .form-label {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-        }
-
-        .form-control {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
-            border-radius: 12px;
-            padding: 12px 15px;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            background: rgba(0, 0, 0, 0.5);
-            border-color: #00d4ff; /* Неоновая обводка */
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); /* Свечение */
-            color: white;
-        }
-
-        /* Подсказки Django (help text) */
-        .form-text, ul.errorlist {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.5);
-            list-style: none;
-            padding: 0;
-            margin-top: 5px;
+            background-color: var(--dark-bg);
+            font-family: 'Outfit', sans-serif;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            background-image: radial-gradient(circle at 80% 20%, rgba(247, 37, 133, 0.1) 0%, transparent 50%);
         }
         
-        /* --- 4. КНОПКА --- */
-        .btn-glow {
-            background: linear-gradient(90deg, #00d4ff, #007bff);
-            border: none;
-            color: white;
-            font-weight: 700;
-            padding: 14px;
-            border-radius: 12px;
-            width: 100%;
-            margin-top: 20px;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.4);
+        .glass-card {
+            background: rgba(20, 25, 40, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            width: 100%; max-width: 450px;
+            position: relative; overflow: hidden;
+        }
+        .glass-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
         }
 
-        .btn-glow:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0, 212, 255, 0.6);
-            color: white;
+        /* Стиль полей формы Django */
+        input {
+            background: rgba(0, 0, 0, 0.3) !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            color: #fff !important; padding: 12px; border-radius: 12px; width: 100%; display: block; margin-bottom: 15px;
         }
+        input:focus { border-color: var(--secondary) !important; outline: none; }
+        label { color: rgba(255,255,255,0.6); font-size: 0.85rem; font-weight: bold; margin-bottom: 5px; display: block; }
+        .helptext { font-size: 0.75rem; color: rgba(255,255,255,0.3); display: none; } /* Скрываем подсказки Django если мешают */
 
-        /* Ссылка внизу */
-        .login-link {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: 0.3s;
+        .btn-neon {
+            background: linear-gradient(135deg, #f72585, #4361ee);
+            border: none; color: white; padding: 14px; width: 100%; border-radius: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; margin-top: 20px;
         }
-        .login-link:hover {
-            color: #00d4ff;
-        }
-
-        /* Иконка ракеты */
-        .rocket-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #ff00cc, #3333ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+        .btn-neon:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(67, 97, 238, 0.4); color: white; }
     </style>
 </head>
 <body>
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
+    <div class="glass-card animate__animated animate__fadeInUp">
+        <h4 class="text-white fw-bold mb-2 text-center">Создать Аккаунт 🚀</h4>
+        <p class="text-white-50 text-center small mb-4">Начни создавать идеальные резюме</p>
 
-    <div class="glass-card">
-        <div class="text-center mb-4">
-            <i class="fas fa-rocket rocket-icon"></i>
-            <h2 class="fw-bold text-white">Start Your Journey</h2>
-            <p class="text-white-50">Создай аккаунт и получи доступ к AI</p>
-        </div>
-
-        <form method="POST">
+        <form method="post">
             {% csrf_token %}
-            
             {% for field in form %}
-                <div class="mb-3">
-                    <label class="form-label">{{ field.label }}</label>
-                    
-                    <div class="input-group">
-                        {{ field }}
-                    </div>
-                    
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
                     {% if field.errors %}
-                        <div class="text-danger small mt-1">
-                            {{ field.errors.0 }}
-                        </div>
-                    {% endif %}
-                    
-                    {% if field.help_text %}
-                        <div class="form-text">{{ field.help_text|safe }}</div>
+                        <div class="text-danger small mb-2">{{ field.errors.0 }}</div>
                     {% endif %}
                 </div>
             {% endfor %}
 
-            <button type="submit" class="btn btn-glow">
-                Создать аккаунт <i class="fas fa-arrow-right ms-2"></i>
-            </button>
+            <button type="submit" class="btn btn-neon">Зарегистрироваться</button>
         </form>
 
-        <div class="text-center mt-4 pt-3 border-top border-secondary border-opacity-25">
-            <a href="{% url 'login' %}" class="login-link">
-                Уже есть аккаунт? <span class="fw-bold text-white">Войти</span>
-            </a>
+        <div class="text-center mt-4">
+            <span class="text-white-50 small">Уже есть аккаунт?</span>
+            <a href="{% url 'login' %}" class="text-primary fw-bold text-decoration-none ms-1">Войти</a>
         </div>
     </div>
 
-    <script>
-        // Django рендерит поля "голыми", этот скрипт одевает их в Bootstrap
-        document.querySelectorAll('input').forEach(field => {
-            field.classList.add('form-control');
-            field.autocomplete = 'off'; // Отключаем автозаполнение браузера, чтобы не портило стиль
-        });
-    </script>
 </body>
 </html>
