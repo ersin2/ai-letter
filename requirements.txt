@@ -1,0 +1,10 @@
+Django==5.0.3
+gunicorn
+dj-database-url
+psycopg2-binary
+whitenoise
+python-dotenv
+reportlab
+groq
+httpx
+pillow
