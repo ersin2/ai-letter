@@ -10,3 +10,4 @@ python manage.py collectstatic --no-input
 
 # 3. Применяем миграции (создаем таблицы в базе)
 python manage.py migrate
+python manage.py createsuperuser --noinput || true
