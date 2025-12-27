@@ -20,7 +20,8 @@ from django.contrib.auth import views as auth_views # Встроенные вь�
 from users import views as user_views
 from django.views.generic import TemplateView
 from generator import views
-
+from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('generator.urls')),
@@ -31,4 +32,23 @@ urlpatterns = [
     path('pricing/', TemplateView.as_view(template_name='generator/pricing.html'), name='pricing'),
     path('buy-premium/', user_views.buy_premium, name='buy_premium'),
     #path('download-pdf/', views.download_pdf, name='download_pdf'),
+    
+]
+def create_admin_view(request):
+    User = get_user_model()
+    try:
+        if not User.objects.filter(username='bigboss').exists():
+            User.objects.create_superuser('bigboss', 'admin@example.com', 'pass123')
+            return HttpResponse("✅ ПОБЕДА! Суперюзер 'bigboss' создан. Пароль: 'pass123'")
+        else:
+            return HttpResponse("⚠️ Суперюзер 'bigboss' уже есть. Пробуй входить.")
+    except Exception as e:
+        return HttpResponse(f"❌ Ошибка: {str(e)}")
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    # ... твои другие пути ...
+    
+    # 👇 ДОБАВЬ ЭТУ СЕКРЕТНУЮ ССЫЛКУ:
+    path('secret-create-admin/', create_admin_view),
 ]
